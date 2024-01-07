@@ -11,8 +11,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-
-
 router.get("/", async (req, res) => {
     const {
         query: { cat, find },
@@ -38,6 +36,25 @@ router.get("/", async (req, res) => {
         res.status(200).json(data);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.get('/:id', async (req, res) => {
+
+    try {
+        const data = await products.findById(req.params.id);
+
+        if (!data) {
+            // Product not found
+            res.status(404).json({ error: 'Product not found' });
+            return;
+        }
+
+        // Product found, send data
+        res.status(200).json(data);
+    } catch (err) {
+        // Handle errors
+        console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
